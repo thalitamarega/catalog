@@ -98,13 +98,18 @@ function bestCatalogImage(product: ShopifyProduct) {
     const shortestSide = Math.min(image.width ?? 0, image.height ?? 0);
     let score = Math.min(shortestSide, 1600) / 20;
 
-    // A capa da loja costuma ser a composição mais clara e, quando há duas
-    // cores, normalmente mostra prata/natural e dourado lado a lado.
-    if (position === 1) score += bothFinishes ? 180 : 75;
+    // Para produtos com prata/natural e dourado, a capa costuma ser a
+    // composição comparativa das duas cores. Essa leitura é o critério
+    // principal do catálogo, desde que exista uma alternativa limpa.
+    if (bothFinishes && position === 1) score += 1200;
+    else if (bothFinishes && position === 2) score += 240;
+    else if (position === 1) score += 75;
     if (position <= 3) score += 16 - position;
     if (/^(img[_-]|dsc[_-]|3p8a|20\d{6,})/i.test(filename)) score += 12;
     if (marketplaceOrTiny.test(filename) || shortestSide < 600) score -= 140;
-    if (explicitlyMarked.test(filename)) score -= 1000;
+    // Uma imagem identificada como marcada não deve vencer uma alternativa
+    // limpa da mesma joia, mesmo que seja a capa com duas cores.
+    if (explicitlyMarked.test(filename)) score -= 2000;
 
     return { image, score };
   });

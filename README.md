@@ -78,7 +78,7 @@ flowchart LR
 
 ### Qualidade visual e 3D
 
-- Seleção de imagens por pontuação de resolução, posição e variações prata/dourado.
+- Seleção de imagens por pontuação de resolução e posição, com prioridade máxima para composições oficiais que mostram prata/natural e dourado juntos.
 - Mapeamento manual por `slug` para evitar associar imagens de peças parecidas incorretamente.
 - Script em Node.js/Sharp para triagem de marca d'água por análise de pixels.
 - Hero em Three.js com geometria 3D real, materiais físicos, iluminação e descarte correto de recursos WebGL.
