@@ -1,0 +1,12 @@
+# dependencies and framework output
+node_modules/
+.next/
+out/
+
+# local environment and deployment files
+.env*
+.vercel/
+
+# files generated during image experiments
+generated_images/
+upload/
