@@ -166,11 +166,29 @@ export default function CatalogPage() {
       } catch {
         // A seleção validada no Supabase continua disponível se a fonte estiver indisponível.
       }
-      const { data } = await supabase.from("catalog_products")
-        .select("id, slug, title, description, image_url, material, category, source_sku")
-        .eq("is_active", true).order("created_at", { ascending: false });
-      if (data?.length) {
-        setCatalog(normalizedCatalog(data as CatalogProduct[]));
+      const pageSize = 1000;
+      const databaseProducts: CatalogProduct[] = [];
+      let databaseError = false;
+
+      for (let from = 0; ; from += pageSize) {
+        const { data, error } = await supabase.from("catalog_products")
+          .select("id, slug, title, description, image_url, material, category, source_sku")
+          .eq("is_active", true)
+          .order("created_at", { ascending: false })
+          .range(from, from + pageSize - 1);
+
+        if (error) {
+          databaseError = true;
+          break;
+        }
+
+        const batch = (data ?? []) as CatalogProduct[];
+        databaseProducts.push(...batch);
+        if (batch.length < pageSize) break;
+      }
+
+      if (!databaseError && databaseProducts.length) {
+        setCatalog(normalizedCatalog(databaseProducts));
         setCatalogNotice("Exibindo a seleção disponível no momento.");
       } else {
         setCatalogNotice("Não foi possível atualizar o catálogo. Exibindo uma seleção temporária.");
