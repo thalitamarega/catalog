@@ -10,3 +10,9 @@ out/
 # files generated during image experiments
 generated_images/
 upload/
+
+# Local migration progress (no credentials in source)
+.image-migration-*.json
+
+# Working copies of photos; deployment uses verified packs
+public/catalog/photos/
